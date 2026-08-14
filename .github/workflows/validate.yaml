@@ -1,0 +1,28 @@
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout iac-pve-public
+        uses: actions/checkout@v7
+
+      - name: OpenTofu - Setup Tofu
+        uses: opentofu/setup-opentofu@v2
+
+      - name: OpenTofu - Validate
+        id: validate
+        run: |
+          anyDirFailed=0
+          for dir in $(ls modules); do
+            echo "Validating module in modules/$dir"
+            tofu -chdir="modules/$dir" validate || anyDirFailed=1
+          done
+          exit $anyDirFailed
+
+      
