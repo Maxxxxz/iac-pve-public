@@ -17,7 +17,7 @@ resource "proxmox_virtual_environment_vm" "this" {
   disk {
     datastore_id = var.vm_config.disk_datastore_id
     interface    = var.vm_config.disk_interface
-    import_from  = var.vm_config.disk_import_from
+    file_id      = var.vm_config.disk_file_id
   }
 
   initialization {

@@ -34,7 +34,7 @@ variable vm_config {
     memory_size_mb        = number
     disk_datastore_id     = string
     disk_interface        = string
-    disk_import_from      = string
+    disk_file_id          = string
     ipv4_address          = string
     user_account_username = string
   })
@@ -55,8 +55,12 @@ variable vm_config {
     error_message = "The 'memory_size_mb' must be greater than 0."
   }
   validation {
-    condition     = length(var.vm_config.disk_import_from) > 0
-    error_message = "The path in 'disk_import_from' must be specified."
+    condition     = length(var.vm_config.disk_file_id) > 0
+    error_message = "The path in 'disk_file_id' must be specified."
+  }
+  validation {
+    condition     = length(var.vm_config.disk_interface) > 0
+    error_message = "The interface in 'disk_interface' must be specified."
   }
   validation {
     condition     = length(var.vm_config.user_account_username) >= 3
