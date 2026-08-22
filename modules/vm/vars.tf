@@ -22,6 +22,16 @@ variable vm_description {
   default = "Managed by OpenTofu"
 }
 
+variable vm_tags {
+  description = "Tags to assign to the virtual machine."
+  type = list(string)
+  default = []
+  validation {
+    condition = length(var.vm_tags) > 0
+    error_message = "At least one tag must be specified in 'vm_tags'."
+  }
+}
+
 variable cpu_cores {
   description = "var.cpu_cores"
   type = number
