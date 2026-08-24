@@ -35,16 +35,17 @@ variable vm_config {
     os_disk               = object({
       disk_size_gb        = number
       disk_datastore_id   = string
+      disk_import_from    = string
       disk_interface      = string
-      disk_file_id        = string
     })
-    data_disks            = list(object({
+    data_disks            = optional(list(object({
       disk_size_gb        = number
       disk_datastore_id   = string
       disk_interface      = string
-    }))
+    })))
     network_vlan_id       = number
     ipv4_address          = string
+    ipv4_gateway          = string
     user_account_username = string
   })
   validation {

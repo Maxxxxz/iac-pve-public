@@ -29,8 +29,8 @@ resource "proxmox_virtual_environment_vm" "vm" {
   disk {
     size         = var.vm_config.os_disk.disk_size_gb
     datastore_id = var.vm_config.os_disk.disk_datastore_id
+    import_from  = var.vm_config.os_disk.disk_import_from
     interface    = var.vm_config.os_disk.disk_interface
-    file_id      = var.vm_config.os_disk.disk_file_id
   }
   dynamic "disk" {
     for_each = { for idx, val in proxmox_virtual_environment_vm.data_vm.disk : idx => val }
@@ -51,6 +51,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     ip_config {
       ipv4 {
         address = var.vm_config.ipv4_address
+        gateway = var.vm_config.ipv4_gateway
       }
     }
 
