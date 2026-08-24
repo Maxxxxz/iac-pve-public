@@ -32,9 +32,18 @@ variable vm_config {
     cpu_architecture      = optional(string, "x86_64")
     cpu_type              = optional(string, "host")
     memory_size_mb        = number
-    disk_datastore_id     = string
-    disk_interface        = string
-    disk_file_id          = string
+    os_disk               = object({
+      disk_size_gb        = number
+      disk_datastore_id   = string
+      disk_interface      = string
+      disk_file_id        = string
+    })
+    data_disks            = list(object({
+      disk_size_gb        = number
+      disk_datastore_id   = string
+      disk_interface      = string
+    }))
+    network_vlan_id       = number
     ipv4_address          = string
     user_account_username = string
   })
@@ -55,12 +64,8 @@ variable vm_config {
     error_message = "The 'memory_size_mb' must be greater than 0."
   }
   validation {
-    condition     = length(var.vm_config.disk_file_id) > 0
-    error_message = "The path in 'disk_file_id' must be specified."
-  }
-  validation {
-    condition     = length(var.vm_config.disk_interface) > 0
-    error_message = "The interface in 'disk_interface' must be specified."
+    condition     = length(var.vm_config.data_disks) > 0
+    error_message = "At least one data disk must be specified in 'data_disks'."
   }
   validation {
     condition     = length(var.vm_config.user_account_username) >= 3

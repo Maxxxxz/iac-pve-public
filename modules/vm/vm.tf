@@ -1,4 +1,21 @@
-resource "proxmox_virtual_environment_vm" "this" {
+resource "proxmox_virtual_environment_vm" "data_vm" {
+  name        = join("-", [var.vm_name, "data"])
+  tags        = ["data"]
+  node_name   = var.node_name
+  description = join("\n\n", [var.vm_config.vm_description, "Data VM. Not bootable. (Managed by OpenTofu)"])
+  started     = false
+  on_boot     = false
+  dynamic "disk" {
+    for_each = var.vm_config.data_disks
+    content {
+      size         = disk.value.disk_size_gb
+      datastore_id = disk.value.disk_datastore_id
+      interface    = disk.value.disk_interface
+    }
+  }
+}
+
+resource "proxmox_virtual_environment_vm" "vm" {
   name        = var.vm_name
   node_name   = var.node_name
   description = join("\n\n", [var.vm_config.vm_description, "(Managed by OpenTofu)"])
@@ -9,17 +26,27 @@ resource "proxmox_virtual_environment_vm" "this" {
     architecture = var.vm_config.cpu_architecture
     type         = var.vm_config.cpu_type
   }
+  disk {
+    size         = var.vm_config.os_disk.disk_size_gb
+    datastore_id = var.vm_config.os_disk.disk_datastore_id
+    interface    = var.vm_config.os_disk.disk_interface
+    file_id      = var.vm_config.os_disk.disk_file_id
+  }
+  dynamic "disk" {
+    for_each = { for idx, val in proxmox_virtual_environment_vm.data_vm.disk : idx => val }
+    iterator = data_disk
+    content {
+      size              = data_disk.value.size
+      datastore_id      = data_disk.value.datastore_id
+      path_in_datastore = data_disk.value.path_in_datastore
+      file_format       = data_disk.value.file_format
+      interface         = "scsi${data_disk.key + 1}"
+    }
+  }
 
   memory {
     dedicated = var.vm_config.memory_size_mb
   }
-
-  disk {
-    datastore_id = var.vm_config.disk_datastore_id
-    interface    = var.vm_config.disk_interface
-    file_id      = var.vm_config.disk_file_id
-  }
-
   initialization {
     ip_config {
       ipv4 {
@@ -33,5 +60,9 @@ resource "proxmox_virtual_environment_vm" "this" {
     }
   }
 
+  network_device {
+    bridge  = "vmbr0"
+    vlan_id = var.vm_config.network_vlan_id
+  }
 
 }
