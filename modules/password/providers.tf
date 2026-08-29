@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     tls = {
-      source  = "opentofu/tls"
-      version = "4.3.0"
+      source  = "opentofu/random"
+      version = "3.9.0"
     }
   }
 }

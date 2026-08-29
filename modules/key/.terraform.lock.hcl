@@ -1,7 +1,7 @@
 # This file is maintained automatically by "tofu init".
 # Manual edits may be lost in future updates.
 
-provider "registry.opentofu.org/hashicorp/tls" {
+provider "registry.opentofu.org/opentofu/tls" {
   version     = "4.3.0"
   constraints = "4.3.0"
   hashes = [

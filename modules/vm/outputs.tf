@@ -30,6 +30,6 @@ output "user_account_username" {
 
 output "user_account_password" {
   description = "The password of the default user account created on the virtual machine."
-  value       = var.user_account_password
+  value       = proxmox_virtual_environment_vm.vm.initialization[0].user_account[0].password
   sensitive   = true
 }
