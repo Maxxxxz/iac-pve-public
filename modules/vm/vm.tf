@@ -58,6 +58,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     user_account {
       username = var.vm_config.user_account_username
       password = var.user_account_password
+      keys     = [var.user_account_public_key]
     }
   }
 

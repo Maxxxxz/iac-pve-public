@@ -22,6 +22,12 @@ variable user_account_password {
   sensitive = true
 }
 
+variable user_account_public_key {
+  description = "The public key for the default user account to be created on the virtual machine."
+  type = string
+  sensitive = true
+}
+
 variable vm_config {
   description = "Configuration for the virtual machine."
   type = object({
